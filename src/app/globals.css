@@ -279,6 +279,27 @@ body {
   margin-bottom: 0.5rem;
 }
 
+/* Scene Break Dividers: Format <hr> as Centered Diamonds (Matching Image 3) */
+.reader-body hr {
+  border: none !important;
+  outline: none !important;
+  height: auto !important;
+  margin: 2.5rem 0 !important;
+  text-align: center !important;
+  background: transparent !important;
+  position: relative !important;
+}
+
+.reader-body hr::after {
+  content: "❖   ❖   ❖";
+  display: block;
+  text-align: center !important;
+  font-size: 1.125rem;
+  letter-spacing: 0.6em;
+  color: var(--color-secondary);
+  opacity: 0.85;
+}
+
 /* Base Paragraph & Element Styling */
 .reader-body p {
   margin-bottom: 1.5rem;

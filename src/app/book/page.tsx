@@ -307,9 +307,6 @@ export default function BookDirectoryPage() {
                           <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--color-secondary)]">
                             CHAPTER {item.num}
                           </span>
-                          <span className="text-[10px] font-semibold px-2 py-0.2 rounded bg-theme-base border border-theme text-theme-muted">
-                            VOLUME 1
-                          </span>
                         </div>
                         <h3 className="font-cinzel font-bold text-sm sm:text-base text-theme-primary group-hover:text-[var(--color-primary)] transition-colors truncate mt-1">
                           {item.title}
