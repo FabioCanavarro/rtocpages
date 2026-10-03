@@ -5,6 +5,7 @@ import Link from 'next/link';
 import CoverCard3D from '@/components/3DCoverCard';
 import { useTheme } from '@/components/ThemeContext';
 import { TOCItem, Bookmark } from '@/types';
+import RangeModal from '@/components/RangeModal';
 import { 
   BookOpen, 
   Download, 
@@ -15,7 +16,8 @@ import {
   Filter, 
   Check, 
   RotateCcw,
-  Sparkles
+  Sparkles,
+  CheckSquare
 } from 'lucide-react';
 
 export default function BookDirectoryPage() {
@@ -36,6 +38,7 @@ export default function BookDirectoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [rangeStart, setRangeStart] = useState<number>(1);
   const [rangeEnd, setRangeEnd] = useState<number>(50);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetch('/epub_data/toc.json')
@@ -188,26 +191,37 @@ export default function BookDirectoryPage() {
                 />
               </div>
 
-              {/* Filter Tabs */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-                {[
-                  { id: 'all', label: 'All Chapters', count: toc.length },
-                  { id: 'bookmarked', label: 'Bookmarked', count: progress.bookmarks.length },
-                  { id: 'completed', label: 'Completed', count: progress.completedChapters.length },
-                  { id: 'unread', label: 'Unread', count: Math.max(0, toc.length - progress.completedChapters.length) },
-                ].map(tab => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
-                    className={`px-3 py-1.5 rounded-lg border font-semibold whitespace-nowrap transition-all ${
-                      activeTab === tab.id
-                        ? 'border-[var(--color-primary)] bg-theme-card text-[var(--color-primary)] shadow-sm'
-                        : 'border-transparent text-theme-muted hover:text-theme-primary hover:bg-theme-card/50'
-                    }`}
-                  >
-                    {tab.label} ({tab.count})
-                  </button>
-                ))}
+              {/* Filter Tabs & Pop-up Trigger */}
+              <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1 text-xs">
+                <div className="flex items-center gap-1.5">
+                  {[
+                    { id: 'all', label: 'All Chapters', count: toc.length },
+                    { id: 'bookmarked', label: 'Bookmarked', count: progress.bookmarks.length },
+                    { id: 'completed', label: 'Completed', count: progress.completedChapters.length },
+                    { id: 'unread', label: 'Unread', count: Math.max(0, toc.length - progress.completedChapters.length) },
+                  ].map(tab => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id as any)}
+                      className={`px-3 py-1.5 rounded-lg border font-semibold whitespace-nowrap transition-all ${
+                        activeTab === tab.id
+                          ? 'border-[var(--color-primary)] bg-theme-card text-[var(--color-primary)] shadow-sm'
+                          : 'border-transparent text-theme-muted hover:text-theme-primary hover:bg-theme-card/50'
+                      }`}
+                    >
+                      {tab.label} ({tab.count})
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 font-bold transition-all whitespace-nowrap flex items-center gap-1.5 text-xs shadow-sm shrink-0"
+                  title="Open Bulk Mark Chapter Range Pop-up"
+                >
+                  <CheckSquare className="w-3.5 h-3.5" />
+                  <span>Mark Range Pop-up</span>
+                </button>
               </div>
 
               {/* Bulk Checkmark Range Selector Tool */}
@@ -346,6 +360,12 @@ export default function BookDirectoryPage() {
         </div>
 
       </main>
+
+      {/* Bulk Chapter Range Modal Pop-up */}
+      <RangeModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
 
     </div>
   );

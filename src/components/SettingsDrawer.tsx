@@ -82,10 +82,10 @@ export default function SettingsDrawer({ isOpen, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[100] flex justify-end overflow-hidden">
-      {/* Dark Overlay Backdrop */}
+      {/* Overlay Backdrop - Clean transparent overlay without blur so reader text remains clear */}
       <div 
         onClick={onClose}
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/20 transition-opacity"
       />
 
       {/* Slide-out Drawer Panel */}

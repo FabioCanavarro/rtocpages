@@ -5,19 +5,22 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from './ThemeContext';
 import SettingsDrawer from './SettingsDrawer';
+import RangeModal from './RangeModal';
 import { 
   BookOpen, 
   Download, 
   Settings, 
   Palette,
   Flame,
-  AlertCircle
+  AlertCircle,
+  CheckSquare
 } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
   const { settings, progress, activePalette, isLoaded } = useTheme();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isRangeModalOpen, setIsRangeModalOpen] = useState(false);
 
   const isHomePage = pathname === '/';
   const isSticky = settings.stickyNavbar ?? false;
@@ -110,6 +113,16 @@ export default function Navbar() {
               <span className="hidden sm:inline font-cinzel">{activePalette.name}</span>
             </button>
 
+            {/* Bulk Mark Range Button */}
+            <button
+              onClick={() => setIsRangeModalOpen(true)}
+              className="p-2 rounded-xl border border-theme bg-theme-surface hover:bg-theme-card text-emerald-400 hover:text-emerald-300 transition-all shadow-sm flex items-center gap-1.5 text-xs font-semibold"
+              title="Bulk Mark Chapter Range Pop-up"
+            >
+              <CheckSquare className="w-4 h-4" />
+              <span className="hidden md:inline">Mark Range</span>
+            </button>
+
             {/* Settings Gear Button */}
             <button
               onClick={() => setIsSettingsOpen(true)}
@@ -133,6 +146,16 @@ export default function Navbar() {
             <Settings className="w-5 h-5" />
             <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-theme-card border border-theme text-xs font-semibold text-theme-primary opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg">
               Palette & Settings
+            </span>
+          </button>
+
+          <button
+            onClick={() => setIsRangeModalOpen(true)}
+            className="group relative p-3 rounded-2xl bg-theme-surface/90 border border-theme shadow-xl backdrop-blur-md text-emerald-400 hover:scale-110 transition-all hover:bg-theme-card"
+          >
+            <CheckSquare className="w-5 h-5" />
+            <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-theme-card border border-theme text-xs font-semibold text-theme-primary opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg">
+              Bulk Mark Chapter Range
             </span>
           </button>
 
@@ -191,6 +214,12 @@ export default function Navbar() {
       <SettingsDrawer
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
+      />
+
+      {/* Bulk Chapter Range Modal Pop-up */}
+      <RangeModal
+        isOpen={isRangeModalOpen}
+        onClose={() => setIsRangeModalOpen(false)}
       />
     </>
   );
