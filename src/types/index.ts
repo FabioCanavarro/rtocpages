@@ -35,7 +35,7 @@ export interface ReadingSettings {
   fontWeight: number; // 300 - 700
   indentParagraphs: boolean;
   stickyNavbar: boolean;
-  showNavbar: boolean;
+  showReaderBorder: boolean;
   tapToScroll: boolean;
 }
 

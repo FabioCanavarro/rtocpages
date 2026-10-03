@@ -80,7 +80,7 @@ export const DEFAULT_SETTINGS: ReadingSettings = {
   fontWeight: 400,
   indentParagraphs: false,
   stickyNavbar: true,
-  showNavbar: true,
+  showReaderBorder: true,
   tapToScroll: true
 };
 

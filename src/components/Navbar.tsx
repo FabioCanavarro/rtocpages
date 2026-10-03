@@ -21,110 +21,107 @@ export default function Navbar() {
 
   const isHomePage = pathname === '/';
   const isSticky = settings.stickyNavbar ?? true;
-  const isVisible = settings.showNavbar ?? true;
 
   return (
     <>
       {/* Main Top Navigation Header */}
-      {isVisible && (
-        <header className={`${isSticky ? 'sticky top-0' : 'relative'} z-40 w-full border-b border-theme bg-theme-base/90 backdrop-blur-md transition-all duration-300`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            
-            {/* Clean Logo & Title */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <div>
-                <span className="font-cinzel font-bold text-lg sm:text-xl tracking-wide text-theme-primary block group-hover:text-[var(--color-primary)] transition-colors">
-                  Regressor&apos;s Tale
-                </span>
-                <span className="text-[10px] uppercase font-semibold text-[var(--color-secondary)] tracking-widest block -mt-1">
-                  Cultivation Reader
-                </span>
-              </div>
-            </Link>
-
-            {/* Nav Links */}
-            <nav className="hidden md:flex items-center gap-1 bg-theme-surface/60 p-1 rounded-2xl border border-theme">
-              {[
-                { href: '/', label: 'Home' },
-                { href: '/book', label: 'Book Directory' },
-              ].map((item) => {
-                const isActive = pathname === item.href || (item.href === '/book' && (pathname.startsWith('/book') || pathname.startsWith('/read')));
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                      isActive 
-                        ? 'bg-theme-card text-[var(--color-primary)] shadow-sm border border-theme' 
-                        : 'text-theme-secondary hover:text-theme-primary hover:bg-theme-card/50'
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-
-            {/* Quick Actions Right Side */}
-            <div className="flex items-center gap-2 sm:gap-2.5">
-              
-              {/* Active Reading Progress Indicator */}
-              {isLoaded && (
-                <Link 
-                  href={`/read/${progress.currentChapter || 1}`}
-                  className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-theme bg-theme-surface text-xs font-medium text-theme-secondary hover:border-theme hover:text-theme-primary transition-all"
-                  title="Continue reading from saved chapter cookie"
-                >
-                  <Flame className="w-3.5 h-3.5 text-[var(--color-secondary)] animate-pulse" />
-                  <span>Ch. {progress.currentChapter || 1}</span>
-                </Link>
-              )}
-
-              {/* COMBINED ACTION BUTTONS WHEN NOT ON HOMEPAGE */}
-              {!isHomePage && (
-                <>
-                  <Link
-                    href="/book"
-                    className="p-2 rounded-xl border border-theme bg-theme-surface hover:bg-theme-card text-[var(--color-secondary)] transition-all shadow-sm"
-                    title="Book Directory Dashboard"
-                  >
-                    <BookOpen className="w-4 h-4" />
-                  </Link>
-
-                  <a
-                    href="/A_Regressors_Tale_of_Cultivation.epub"
-                    download
-                    className="p-2 rounded-xl border border-theme bg-theme-surface hover:bg-theme-card text-emerald-400 transition-all shadow-sm"
-                    title="Download EPUB (9.43 MB)"
-                  >
-                    <Download className="w-4 h-4" />
-                  </a>
-                </>
-              )}
-
-              {/* Palette Switcher Button */}
-              <button
-                onClick={() => setIsSettingsOpen(true)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-theme bg-theme-card hover:bg-theme-card-hover text-xs font-semibold text-[var(--color-primary)] transition-all shadow-sm"
-                title={`Active Palette: ${activePalette.name}`}
-              >
-                <Palette className="w-4 h-4" />
-                <span className="hidden sm:inline font-cinzel">{activePalette.name}</span>
-              </button>
-
-              {/* Settings Gear Button */}
-              <button
-                onClick={() => setIsSettingsOpen(true)}
-                className="p-2 rounded-xl border border-theme bg-theme-surface hover:bg-theme-card text-theme-secondary hover:text-theme-primary transition-all shadow-sm"
-                title="Open Settings Drawer"
-              >
-                <Settings className="w-4 h-4" />
-              </button>
-
+      <header className={`${isSticky ? 'sticky top-0' : 'relative'} z-40 w-full border-b border-theme bg-theme-base/90 backdrop-blur-md transition-all duration-300`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          
+          {/* Clean Logo & Title */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <div>
+              <span className="font-cinzel font-bold text-lg sm:text-xl tracking-wide text-theme-primary block group-hover:text-[var(--color-primary)] transition-colors">
+                Regressor&apos;s Tale
+              </span>
+              <span className="text-[10px] uppercase font-semibold text-[var(--color-secondary)] tracking-widest block -mt-1">
+                Cultivation Reader
+              </span>
             </div>
+          </Link>
+
+          {/* Nav Links */}
+          <nav className="hidden md:flex items-center gap-1 bg-theme-surface/60 p-1 rounded-2xl border border-theme">
+            {[
+              { href: '/', label: 'Home' },
+              { href: '/book', label: 'Book Directory' },
+            ].map((item) => {
+              const isActive = pathname === item.href || (item.href === '/book' && (pathname.startsWith('/book') || pathname.startsWith('/read')));
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                    isActive 
+                      ? 'bg-theme-card text-[var(--color-primary)] shadow-sm border border-theme' 
+                      : 'text-theme-secondary hover:text-theme-primary hover:bg-theme-card/50'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Quick Actions Right Side */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            
+            {/* Active Reading Progress Indicator */}
+            {isLoaded && (
+              <Link 
+                href={`/read/${progress.currentChapter || 1}`}
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-theme bg-theme-surface text-xs font-medium text-theme-secondary hover:border-theme hover:text-theme-primary transition-all"
+                title="Continue reading from saved chapter cookie"
+              >
+                <Flame className="w-3.5 h-3.5 text-[var(--color-secondary)] animate-pulse" />
+                <span>Ch. {progress.currentChapter || 1}</span>
+              </Link>
+            )}
+
+            {/* COMBINED ACTION BUTTONS WHEN NOT ON HOMEPAGE */}
+            {!isHomePage && (
+              <>
+                <Link
+                  href="/book"
+                  className="p-2 rounded-xl border border-theme bg-theme-surface hover:bg-theme-card text-[var(--color-secondary)] transition-all shadow-sm"
+                  title="Book Directory Dashboard"
+                >
+                  <BookOpen className="w-4 h-4" />
+                </Link>
+
+                <a
+                  href="/A_Regressors_Tale_of_Cultivation.epub"
+                  download
+                  className="p-2 rounded-xl border border-theme bg-theme-surface hover:bg-theme-card text-emerald-400 transition-all shadow-sm"
+                  title="Download EPUB (9.43 MB)"
+                >
+                  <Download className="w-4 h-4" />
+                </a>
+              </>
+            )}
+
+            {/* Palette Switcher Button */}
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-theme bg-theme-card hover:bg-theme-card-hover text-xs font-semibold text-[var(--color-primary)] transition-all shadow-sm"
+              title={`Active Palette: ${activePalette.name}`}
+            >
+              <Palette className="w-4 h-4" />
+              <span className="hidden sm:inline font-cinzel">{activePalette.name}</span>
+            </button>
+
+            {/* Settings Gear Button */}
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="p-2 rounded-xl border border-theme bg-theme-surface hover:bg-theme-card text-theme-secondary hover:text-theme-primary transition-all shadow-sm"
+              title="Open Settings Drawer"
+            >
+              <Settings className="w-4 h-4" />
+            </button>
+
           </div>
-        </header>
-      )}
+        </div>
+      </header>
 
       {/* Floating Side Action Toolbar (ONLY SHOWN ON HOMEPAGE '/') */}
       {isHomePage && (

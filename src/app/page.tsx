@@ -22,14 +22,14 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-theme-base text-theme-primary transition-colors duration-300">
+    <div className="min-h-screen flex flex-col justify-between bg-theme-base text-theme-primary transition-colors duration-300">
       
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden pt-10 pb-16 md:pt-16 md:pb-24 px-4 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden pt-8 pb-12 md:pt-14 md:pb-16 px-4 sm:px-6 lg:px-8 my-auto">
         {/* Background Ambient Particles Overlay */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-radial from-[var(--color-primary)]/10 via-transparent to-transparent pointer-events-none -z-10 blur-3xl" />
 
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-around gap-12 lg:gap-16">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-around gap-10 lg:gap-16">
           
           {/* 3D Novel Cover Card */}
           <div className="w-full md:w-auto flex justify-center shrink-0">
@@ -40,7 +40,7 @@ export default function HomePage() {
           <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-2xl">
             
             {/* Active Theme Badge */}
-            <div className="hero-animate inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-theme-surface border border-theme mb-4 shadow-sm">
+            <div className="hero-animate inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-theme-surface border border-theme mb-3 shadow-sm">
               <Sparkles className="w-4 h-4 text-[var(--color-primary)]" />
               <span className="text-xs font-semibold text-theme-secondary">
                 Theme: <strong className="text-[var(--color-primary)] font-cinzel">{activePalette.name}</strong>
@@ -57,12 +57,12 @@ export default function HomePage() {
             </p>
 
             {/* Iconic Novel Quote */}
-            <blockquote className="hero-animate py-5 px-4 my-4 rounded-2xl bg-theme-surface/60 border-l-4 border-[var(--color-primary)] text-sm sm:text-base text-theme-secondary italic leading-relaxed backdrop-blur-sm">
+            <blockquote className="hero-animate py-4 px-4 my-3 rounded-2xl bg-theme-surface/60 border-l-4 border-[var(--color-primary)] text-sm sm:text-base text-theme-secondary italic leading-relaxed backdrop-blur-sm">
               &ldquo;The Fool may wander through gray fog, but I walk through blood and broken swords across ten thousand lifetimes. Even without innate talent or legendary cheats... I shall carve my own Dao into the celestial sky.&rdquo;
             </blockquote>
 
             {/* Primary Action CTA Buttons */}
-            <div className="hero-animate flex flex-wrap items-center justify-center md:justify-start gap-3.5 mt-2">
+            <div className="hero-animate flex flex-wrap items-center justify-center md:justify-start gap-3 mt-1">
               <Link
                 href="/book"
                 className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-theme-base font-bold text-sm sm:text-base shadow-xl hover:scale-105 active:scale-95 transition-all duration-200"
@@ -109,7 +109,7 @@ export default function HomePage() {
             </div>
 
             {/* Quick Specs Bar */}
-            <div className="hero-animate flex items-center gap-6 mt-8 pt-6 border-t border-theme text-xs text-theme-muted">
+            <div className="hero-animate flex items-center gap-6 mt-6 pt-5 border-t border-theme text-xs text-theme-muted">
               <div className="flex items-center gap-1.5">
                 <Feather className="w-4 h-4 text-[var(--color-primary)]" />
                 <span><strong>869</strong> Chapters</span>
@@ -129,15 +129,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="mt-auto border-t border-theme bg-theme-surface py-8 px-4 text-center text-xs text-theme-muted">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* FOOTER (CLEAN & COMPACT, NO UNWANTED SUBTEXT) */}
+      <footer className="border-t border-theme bg-theme-surface py-5 px-4 text-center text-xs text-theme-muted shrink-0">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div>
             <p className="font-cinzel font-bold text-theme-primary text-sm">
               A Regressor&apos;s Tale of Cultivation Web Reader
-            </p>
-            <p className="text-xs text-theme-muted mt-0.5">
-              Made with Next.js & anime.js • Vibecoded Site
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 text-theme-secondary">

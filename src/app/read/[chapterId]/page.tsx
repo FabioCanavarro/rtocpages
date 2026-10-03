@@ -293,7 +293,9 @@ export default function ChapterReaderPage({ params }: PageProps) {
             <article 
               ref={contentRef}
               onClick={handleContentClick}
-              className="space-y-8 bg-theme-surface md:p-10 lg:p-12 md:rounded-3xl md:border md:border-theme md:shadow-2xl transition-all select-text cursor-pointer"
+              className={`space-y-8 bg-theme-surface md:p-10 lg:p-12 md:rounded-3xl transition-all select-text cursor-pointer ${
+                (settings.showReaderBorder ?? true) ? 'md:border md:border-theme md:shadow-2xl' : 'md:border-transparent'
+              }`}
             >
               
               {/* Chapter Header */}

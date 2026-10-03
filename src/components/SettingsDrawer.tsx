@@ -18,9 +18,7 @@ import {
   AlignCenter,
   AlignJustify,
   AlignRight,
-  Maximize,
-  Eye,
-  Pin
+  Maximize
 } from 'lucide-react';
 
 interface Props {
@@ -118,7 +116,6 @@ export default function SettingsDrawer({ isOpen, onClose }: Props) {
 
             {/* Font Size & Line Height Grid */}
             <div className="grid grid-cols-2 gap-4">
-              {/* Font Size */}
               <div className="space-y-1.5">
                 <div className="flex justify-between text-xs text-theme-secondary font-medium">
                   <span>Size</span>
@@ -134,7 +131,6 @@ export default function SettingsDrawer({ isOpen, onClose }: Props) {
                 />
               </div>
 
-              {/* Line Height */}
               <div className="space-y-1.5">
                 <div className="flex justify-between text-xs text-theme-secondary font-medium">
                   <span>Height</span>
@@ -286,10 +282,10 @@ export default function SettingsDrawer({ isOpen, onClose }: Props) {
 
           </div>
 
-          {/* SECTION 2: INTERFACE (Matching Image #1 screenshot) */}
+          {/* SECTION 2: INTERFACE */}
           <div className="space-y-4 pt-4 border-t border-theme">
             <label className="text-xs uppercase font-bold tracking-widest font-cinzel text-[var(--color-secondary)] block">
-              Interface
+              Interface & Layout
             </label>
 
             {/* Toggle Fullscreen Button */}
@@ -318,18 +314,18 @@ export default function SettingsDrawer({ isOpen, onClose }: Props) {
               </button>
             </div>
 
-            {/* Show Navbar Toggle */}
+            {/* Show Reader Container Border Switch (Added per user request) */}
             <div className="flex items-center justify-between py-2">
-              <span className="text-xs text-theme-secondary font-medium">Show Navbar</span>
+              <span className="text-xs text-theme-secondary font-medium">Reader Container Border</span>
               <button
-                onClick={() => updateSettings({ showNavbar: !settings.showNavbar })}
+                onClick={() => updateSettings({ showReaderBorder: !(settings.showReaderBorder ?? true) })}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  settings.showNavbar ? 'bg-[var(--color-primary)]' : 'bg-theme-base border border-theme'
+                  (settings.showReaderBorder ?? true) ? 'bg-[var(--color-primary)]' : 'bg-theme-base border border-theme'
                 }`}
               >
                 <span
                   className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    settings.showNavbar ? 'translate-x-6' : 'translate-x-1'
+                    (settings.showReaderBorder ?? true) ? 'translate-x-6' : 'translate-x-1'
                   }`}
                 />
               </button>
