@@ -8,7 +8,7 @@ export type PaletteId =
 
 export type FontFamily = 'serif' | 'sans' | 'mono' | 'cinzel';
 
-export type ReaderWidth = 'narrow' | 'medium' | 'wide' | 'full';
+export type ReaderWidth = 'narrow' | 'medium' | 'wide' | 'full' | 'max';
 
 export type TextAlign = 'left' | 'center' | 'justify' | 'right';
 
@@ -30,6 +30,7 @@ export interface ReadingSettings {
   lineHeight: number; // 1.4 - 2.2
   fontFamily: FontFamily;
   readerWidth: ReaderWidth;
+  customReaderWidth?: number; // 500 - 1800 px
   paragraphSpacing: number; // 1 - 3
   textAlign: TextAlign;
   fontWeight: number; // 300 - 700

@@ -255,20 +255,27 @@ export default function SettingsDrawer({ isOpen, onClose }: Props) {
               </div>
             </div>
 
-            {/* Reader Container Width */}
-            <div className="space-y-2">
-              <span className="text-xs text-theme-secondary font-medium block">Reader Width</span>
-              <div className="grid grid-cols-4 gap-1.5">
+            {/* Reader Container Width & Slider */}
+            <div className="space-y-3">
+              <div className="flex justify-between items-center text-xs text-theme-secondary font-medium">
+                <span>Reader Container Width</span>
+                <span className="font-mono text-[var(--color-primary)] font-bold">
+                  {settings.readerWidth === 'max' ? 'Full (100%)' : `${settings.customReaderWidth || 1024}px`}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-5 gap-1">
                 {[
-                  { id: 'narrow', label: 'Narrow' },
-                  { id: 'medium', label: 'Medium' },
-                  { id: 'wide', label: 'Wide' },
-                  { id: 'full', label: 'Full' },
+                  { id: 'narrow', label: 'Narrow', px: 600 },
+                  { id: 'medium', label: 'Medium', px: 768 },
+                  { id: 'wide', label: 'Wide', px: 1024 },
+                  { id: 'full', label: 'Full', px: 1280 },
+                  { id: 'max', label: 'Max', px: 1800 },
                 ].map(w => (
                   <button
                     key={w.id}
-                    onClick={() => updateSettings({ readerWidth: w.id as ReaderWidth })}
-                    className={`py-1.5 px-2 rounded-lg border text-center text-xs transition-all ${
+                    onClick={() => updateSettings({ readerWidth: w.id as ReaderWidth, customReaderWidth: w.px })}
+                    className={`py-1.5 px-1 rounded-lg border text-center text-[11px] transition-all ${
                       settings.readerWidth === w.id
                         ? 'border-[var(--color-primary)] text-[var(--color-primary)] bg-theme-card font-semibold'
                         : 'border-theme text-theme-muted hover:bg-theme-card/50'
@@ -278,6 +285,25 @@ export default function SettingsDrawer({ isOpen, onClose }: Props) {
                   </button>
                 ))}
               </div>
+
+              {/* Adjustable Width Slider */}
+              {settings.readerWidth !== 'max' && (
+                <div className="space-y-1 pt-1">
+                  <input
+                    type="range"
+                    min="500"
+                    max="1800"
+                    step="20"
+                    value={settings.customReaderWidth || 1024}
+                    onChange={(e) => updateSettings({ customReaderWidth: Number(e.target.value) })}
+                    className="w-full accent-[var(--color-primary)] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-theme-muted font-mono">
+                    <span>500px</span>
+                    <span>1800px (Cover wider screen)</span>
+                  </div>
+                </div>
+              )}
             </div>
 
           </div>

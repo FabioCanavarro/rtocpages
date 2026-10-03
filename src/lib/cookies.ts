@@ -82,3 +82,29 @@ export function markChapterCompletedInCookie(chapterNum: number): ReadingProgres
     totalChaptersRead: updatedCompleted.length
   });
 }
+
+export function markRangeCompletedInCookie(startNum: number, endNum: number): ReadingProgress {
+  const current = getStoredProgress();
+  const min = Math.min(startNum, endNum);
+  const max = Math.max(startNum, endNum);
+  const set = new Set(current.completedChapters);
+  for (let i = min; i <= max; i++) {
+    set.add(i);
+  }
+  const updatedCompleted = Array.from(set).sort((a, b) => a - b);
+  return saveStoredProgress({
+    completedChapters: updatedCompleted,
+    totalChaptersRead: updatedCompleted.length
+  });
+}
+
+export function unmarkRangeCompletedInCookie(startNum: number, endNum: number): ReadingProgress {
+  const current = getStoredProgress();
+  const min = Math.min(startNum, endNum);
+  const max = Math.max(startNum, endNum);
+  const updatedCompleted = current.completedChapters.filter(ch => ch < min || ch > max);
+  return saveStoredProgress({
+    completedChapters: updatedCompleted,
+    totalChaptersRead: updatedCompleted.length
+  });
+}

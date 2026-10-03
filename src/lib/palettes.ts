@@ -75,6 +75,7 @@ export const DEFAULT_SETTINGS: ReadingSettings = {
   lineHeight: 1.8,
   fontFamily: 'serif' as const,
   readerWidth: 'medium' as const,
+  customReaderWidth: 900,
   paragraphSpacing: 1.5,
   textAlign: 'left' as const,
   fontWeight: 400,

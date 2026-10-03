@@ -9,7 +9,9 @@ import {
   getStoredProgress, 
   saveStoredProgress,
   toggleBookmarkInCookie,
-  markChapterCompletedInCookie
+  markChapterCompletedInCookie,
+  markRangeCompletedInCookie,
+  unmarkRangeCompletedInCookie
 } from '@/lib/cookies';
 
 interface ThemeContextType {
@@ -20,6 +22,8 @@ interface ThemeContextType {
   updateProgress: (newProgress: Partial<ReadingProgress>) => void;
   toggleBookmark: (bookmark: Bookmark) => void;
   markCompleted: (chapterNum: number) => void;
+  markRangeCompleted: (startNum: number, endNum: number) => void;
+  unmarkRangeCompleted: (startNum: number, endNum: number) => void;
   isBookmarked: (chapterNum: number) => boolean;
   isCompleted: (chapterNum: number) => boolean;
   setPalette: (id: PaletteId) => void;
@@ -73,6 +77,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setProgress(updated);
   };
 
+  const markRangeCompleted = (startNum: number, endNum: number) => {
+    const updated = markRangeCompletedInCookie(startNum, endNum);
+    setProgress(updated);
+  };
+
+  const unmarkRangeCompleted = (startNum: number, endNum: number) => {
+    const updated = unmarkRangeCompletedInCookie(startNum, endNum);
+    setProgress(updated);
+  };
+
   const isBookmarked = (chapterNum: number) => {
     return progress.bookmarks.some(b => b.chapterNum === chapterNum);
   };
@@ -98,6 +112,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         updateProgress,
         toggleBookmark,
         markCompleted,
+        markRangeCompleted,
+        unmarkRangeCompleted,
         isBookmarked,
         isCompleted,
         setPalette,

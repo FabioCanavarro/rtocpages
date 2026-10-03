@@ -23,6 +23,8 @@ export default function BookDirectoryPage() {
     progress, 
     toggleBookmark, 
     markCompleted, 
+    markRangeCompleted,
+    unmarkRangeCompleted,
     isBookmarked, 
     isCompleted,
     updateProgress 
@@ -32,6 +34,8 @@ export default function BookDirectoryPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'bookmarked' | 'completed' | 'unread'>('all');
   const [isLoading, setIsLoading] = useState(true);
+  const [rangeStart, setRangeStart] = useState<number>(1);
+  const [rangeEnd, setRangeEnd] = useState<number>(50);
 
   useEffect(() => {
     fetch('/epub_data/toc.json')
@@ -204,6 +208,59 @@ export default function BookDirectoryPage() {
                     {tab.label} ({tab.count})
                   </button>
                 ))}
+              </div>
+
+              {/* Bulk Checkmark Range Selector Tool */}
+              <div className="pt-2 border-t border-theme">
+                <div className="p-3 rounded-xl bg-theme-base border border-theme flex flex-wrap items-center justify-between gap-3 text-xs">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="font-semibold text-theme-primary">Checkmark Range:</span>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <span className="text-theme-muted text-[11px]">From Ch</span>
+                      <input
+                        type="number"
+                        min={1}
+                        max={869}
+                        value={rangeStart}
+                        onChange={(e) => setRangeStart(Math.max(1, parseInt(e.target.value) || 1))}
+                        className="w-16 px-2 py-1 rounded bg-theme-surface border border-theme font-mono font-bold text-center text-[var(--color-primary)] focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <span className="text-theme-muted text-[11px]">to</span>
+                      <input
+                        type="number"
+                        min={1}
+                        max={869}
+                        value={rangeEnd}
+                        onChange={(e) => setRangeEnd(Math.min(869, parseInt(e.target.value) || 1))}
+                        className="w-16 px-2 py-1 rounded bg-theme-surface border border-theme font-mono font-bold text-center text-[var(--color-primary)] focus:outline-none"
+                      />
+                    </div>
+
+                    <button
+                      onClick={() => markRangeCompleted(rangeStart, rangeEnd)}
+                      className="px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 font-bold transition-all text-[11px] flex items-center gap-1"
+                      title={`Mark chapters ${rangeStart} through ${rangeEnd} as completed`}
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      Mark Read
+                    </button>
+
+                    <button
+                      onClick={() => unmarkRangeCompleted(rangeStart, rangeEnd)}
+                      className="px-2.5 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 font-semibold transition-all text-[11px]"
+                      title={`Unmark chapters ${rangeStart} through ${rangeEnd}`}
+                    >
+                      Unmark
+                    </button>
+                  </div>
+                </div>
               </div>
 
             </div>

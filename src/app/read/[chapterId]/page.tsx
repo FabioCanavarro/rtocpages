@@ -156,10 +156,11 @@ export default function ChapterReaderPage({ params }: PageProps) {
   const getWidthClass = () => {
     switch (settings.readerWidth) {
       case 'narrow': return 'max-w-xl';
-      case 'wide': return 'max-w-4xl';
-      case 'full': return 'max-w-6xl';
-      case 'medium':
-      default: return 'max-w-2xl';
+      case 'medium': return 'max-w-3xl';
+      case 'wide': return 'max-w-5xl';
+      case 'full': return 'max-w-7xl';
+      case 'max': return 'max-w-none w-full';
+      default: return 'max-w-4xl';
     }
   };
 
@@ -278,7 +279,10 @@ export default function ChapterReaderPage({ params }: PageProps) {
 
       {/* Main Chapter Text Reader Container */}
       <main className="flex-1 py-4 md:py-10 px-0 sm:px-6">
-        <div className={`mx-auto ${getWidthClass()}`}>
+        <div 
+          className={`mx-auto transition-all duration-200 ${getWidthClass()}`}
+          style={{ maxWidth: settings.readerWidth === 'max' ? '100%' : `${settings.customReaderWidth || 1024}px` }}
+        >
           
           {isLoading ? (
             <div className="py-20 text-center space-y-4">
