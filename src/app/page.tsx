@@ -56,10 +56,15 @@ export default function HomePage() {
               회차진행자: 회귀자의 신선기 • Author: Pluto (해날)
             </p>
 
-            {/* Iconic Novel Quote */}
-            <blockquote className="hero-animate py-4 px-4 my-3 rounded-2xl bg-theme-surface/60 border-l-4 border-[var(--color-primary)] text-sm sm:text-base text-theme-secondary italic leading-relaxed backdrop-blur-sm">
-              &ldquo;The Fool may wander through gray fog, but I walk through blood and broken swords across ten thousand lifetimes. Even without innate talent or legendary cheats... I shall carve my own Dao into the celestial sky.&rdquo;
-            </blockquote>
+            {/* Novel Synopsis / Description */}
+            <div className="hero-animate p-4 sm:p-5 my-3 rounded-2xl bg-theme-surface/60 border border-theme text-xs sm:text-sm text-theme-secondary space-y-2 leading-relaxed backdrop-blur-sm">
+              <p className="font-semibold text-theme-primary">
+                Seo Eun-hyun finds himself transmigrated into a harsh Xianxia world trapped in an endless loop of regression upon death.
+              </p>
+              <p>
+                With no legendary cheat abilities or innate spiritual roots, he must rely on sheer perseverance, martial mastery, and unyielding will across centuries of rebirth to defy destiny and carve his path back to immortality.
+              </p>
+            </div>
 
             {/* Primary Action CTA Buttons */}
             <div className="hero-animate flex flex-wrap items-center justify-center md:justify-start gap-3 mt-1">
