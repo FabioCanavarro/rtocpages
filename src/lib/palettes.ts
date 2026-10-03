@@ -79,7 +79,7 @@ export const DEFAULT_SETTINGS: ReadingSettings = {
   textAlign: 'left' as const,
   fontWeight: 400,
   indentParagraphs: false,
-  stickyNavbar: true,
+  stickyNavbar: false, // Default set to OFF per user request
   showReaderBorder: true,
   tapToScroll: true
 };

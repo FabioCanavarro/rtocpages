@@ -20,7 +20,7 @@ export default function Navbar() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const isHomePage = pathname === '/';
-  const isSticky = settings.stickyNavbar ?? true;
+  const isSticky = settings.stickyNavbar ?? false;
 
   return (
     <>
