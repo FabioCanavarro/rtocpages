@@ -1,12 +1,12 @@
 # A Regressor's Tale of Cultivation • Web Reader
 
-> ⚡ **Note**: This is a **vibecoded site** built for *A Regressor's Tale of Cultivation* (회차진행자: 회귀자의 신선기).
+>  **Note**: This is a **vibecoded site** built for *A Regressor's Tale of Cultivation* (회차진행자: 회귀자의 신선기).
 
 A sleek, fast, and feature-rich web novel reader modeled after `beyonder.pages.dev`, featuring full offline EPUB support, 3D novel cover tilt animations, customizable Xianxia & Catppuccin Mocha color palettes, and cookie-based reading progress synchronization.
 
 ---
 
-## ✨ Features
+## Features
 
 - **3D Novel Cover Tilt**: Interactive card with mouse parallax and smooth `anime.js` entrance animations.
 - **Catppuccin Mocha & Cultivation Palettes**:
@@ -21,13 +21,12 @@ A sleek, fast, and feature-rich web novel reader modeled after `beyonder.pages.d
   - Export and import JSON backup support.
 - **Book Directory Dashboard (`/book`)**:
   - Complete chapter directory (869 chapters) with search filtering and bookmark/completion toggles.
-- **Vercel Analytics & Offline EPUB Download**:
-  - Includes `@vercel/analytics` integration.
+- **Offline EPUB Download**:
   - Direct download button for `A_Regressors_Tale_of_Cultivation.epub` (9.43 MB).
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
 - **Framework**: Next.js (App Router, TypeScript)
 - **Styling**: Vanilla CSS Variables & Tailwind CSS
@@ -37,7 +36,7 @@ A sleek, fast, and feature-rich web novel reader modeled after `beyonder.pages.d
 
 ---
 
-## 🛠️ Local Development
+## Local Development
 
 ```bash
 # Install dependencies
