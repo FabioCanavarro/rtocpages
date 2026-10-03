@@ -212,18 +212,79 @@ body {
   transform-style: preserve-3d;
 }
 
-/* Reader Content Styling */
+/* EPUB Chapter Header & Centered Elements (Matching Screenshot 2) */
+.reader-body .chapter-header {
+  text-align: center !important;
+  margin-top: 0.5rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.reader-body .chapter-series {
+  display: block;
+  text-align: center !important;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: var(--color-secondary);
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+.reader-body .chapter-number {
+  display: block;
+  text-align: center !important;
+  font-family: 'Cinzel', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.reader-body .chapter-title {
+  display: block;
+  text-align: center !important;
+  font-family: 'Cinzel', serif;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.25;
+}
+
+.reader-body .chapter-date {
+  display: block;
+  text-align: center !important;
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.reader-body .chapter-divider {
+  display: block;
+  text-align: center !important;
+  letter-spacing: 0.75em;
+  color: var(--color-secondary);
+  font-size: 1.125rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Base Paragraph & Element Styling */
 .reader-body p {
   margin-bottom: 1.5rem;
   line-height: inherit;
 }
-.reader-body h1, .reader-body h2, .reader-body h3 {
-  font-family: 'Cinzel', serif;
-  color: var(--color-primary);
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
+
 .reader-body blockquote {
   border-left: 3px solid var(--color-primary);
   padding-left: 1rem;
@@ -234,4 +295,8 @@ body {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   border-radius: 0 8px 8px 0;
+}
+
+.cultivation-bracket {
+  color: var(--color-primary);
 }

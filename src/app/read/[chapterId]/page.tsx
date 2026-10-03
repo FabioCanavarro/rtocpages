@@ -302,21 +302,6 @@ export default function ChapterReaderPage({ params }: PageProps) {
               }`}
             >
               
-              {/* Chapter Header */}
-              <div className="pb-8 border-b border-theme text-center space-y-2 select-none">
-                <span className="text-xs uppercase font-bold font-mono tracking-widest text-[var(--color-secondary)] px-3 py-1 rounded-full bg-theme-surface border border-theme inline-block">
-                  Chapter {chapter.num} • {chapter.wordCount} Words
-                </span>
-                <h1 className="font-cinzel font-bold text-2xl sm:text-4xl text-theme-primary mt-2">
-                  {chapter.title}
-                </h1>
-                {settings.tapToScroll && (
-                  <p className="text-[11px] text-theme-muted font-mono">
-                    💡 Tap lower screen to scroll down
-                  </p>
-                )}
-              </div>
-
               {/* Formatted Chapter Body */}
               <div
                 className={`reader-body ${getFontClass()} ${getAlignClass()} text-theme-primary leading-relaxed ${
@@ -327,8 +312,19 @@ export default function ChapterReaderPage({ params }: PageProps) {
                   lineHeight: settings.lineHeight,
                   fontWeight: settings.fontWeight || 400
                 }}
-                dangerouslySetInnerHTML={{ __html: chapter.content }}
-              />
+              >
+                {/* Fallback header if chapter content does not already include EPUB header */}
+                {chapter && !chapter.content.includes('chapter-header') && (
+                  <header className="chapter-header">
+                    <span className="chapter-series">A Regressor’s Tale of Cultivation</span>
+                    <span className="chapter-number">Chapter {chapter.num}</span>
+                    <h1 className="chapter-title">{chapter.title}</h1>
+                    <div className="chapter-divider">❖   ❖   ❖</div>
+                  </header>
+                )}
+
+                <div dangerouslySetInnerHTML={{ __html: chapter.content }} />
+              </div>
 
               {/* Chapter Footer Navigation */}
               <div className="pt-10 border-t border-theme flex flex-col sm:flex-row items-center justify-between gap-4 select-none">
