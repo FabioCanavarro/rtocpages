@@ -141,6 +141,11 @@ body {
   font-family: 'Cinzel', serif;
 }
 
+/* Paragraph Indentation */
+.indent-paragraphs p {
+  text-indent: 1.75rem;
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 8px;

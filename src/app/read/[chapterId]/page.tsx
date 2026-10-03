@@ -11,12 +11,9 @@ import {
   List, 
   Bookmark as BookmarkIcon, 
   CheckCircle, 
-  Settings, 
   Search, 
   X, 
   ArrowUp,
-  Sliders,
-  Sparkles,
   BookOpen
 } from 'lucide-react';
 import anime from '@/lib/animeHelper';
@@ -35,8 +32,7 @@ export default function ChapterReaderPage({ params }: PageProps) {
     toggleBookmark, 
     markCompleted, 
     isBookmarked, 
-    isCompleted,
-    updateSettings 
+    isCompleted 
   } = useTheme();
 
   const chapterNum = parseInt(resolvedParams.chapterId, 10) || 1;
@@ -52,13 +48,11 @@ export default function ChapterReaderPage({ params }: PageProps) {
   useEffect(() => {
     setIsLoading(true);
 
-    // Fetch TOC index
     fetch('/epub_data/toc.json')
       .then(res => res.json())
       .then(data => setToc(data))
       .catch(err => console.error('TOC load error:', err));
 
-    // Fetch Chapter data
     fetch(`/epub_data/chapters/chapter-${chapterNum}.json`)
       .then(res => {
         if (!res.ok) throw new Error('Chapter not found');
@@ -67,13 +61,10 @@ export default function ChapterReaderPage({ params }: PageProps) {
       .then((data: ChapterData) => {
         setChapter(data);
         setIsLoading(false);
-        // Update stored reading progress in cookie
         updateProgress({ currentChapter: chapterNum });
 
-        // Scroll to top or stored scroll percentage
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // Anime.js content fade in
         if (contentRef.current) {
           anime({
             targets: contentRef.current,
@@ -90,7 +81,7 @@ export default function ChapterReaderPage({ params }: PageProps) {
       });
   }, [chapterNum]);
 
-  // Track scroll position percentage & save to cookie periodically
+  // Track scroll position percentage
   useEffect(() => {
     const handleScroll = () => {
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -104,6 +95,24 @@ export default function ChapterReaderPage({ params }: PageProps) {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Tap to Scroll feature
+  const handleContentClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!settings.tapToScroll) return;
+    // Don't trigger if user clicks an interactive element like button or link
+    const target = e.target as HTMLElement;
+    if (target.closest('a') || target.closest('button') || target.closest('input')) return;
+
+    const clickY = e.clientY;
+    const windowHeight = window.innerHeight;
+
+    // Tap in lower 75% of screen -> scroll down
+    if (clickY > windowHeight * 0.25) {
+      window.scrollBy({ top: windowHeight * 0.75, behavior: 'smooth' });
+    } else {
+      window.scrollBy({ top: -windowHeight * 0.75, behavior: 'smooth' });
+    }
+  };
 
   // Keyboard navigation shortcuts
   useEffect(() => {
@@ -129,7 +138,15 @@ export default function ChapterReaderPage({ params }: PageProps) {
   };
 
   const handleToggleCompleted = () => {
-    markCompleted(chapterNum);
+    if (isCompleted(chapterNum)) {
+      const updated = progress.completedChapters.filter(c => c !== chapterNum);
+      updateProgress({
+        completedChapters: updated,
+        totalChaptersRead: updated.length
+      });
+    } else {
+      markCompleted(chapterNum);
+    }
   };
 
   const filteredToc = toc.filter(item => 
@@ -138,7 +155,6 @@ export default function ChapterReaderPage({ params }: PageProps) {
     `${item.num}` === searchQuery.trim()
   );
 
-  // Determine reader container width class
   const getWidthClass = () => {
     switch (settings.readerWidth) {
       case 'narrow': return 'max-w-xl';
@@ -149,7 +165,6 @@ export default function ChapterReaderPage({ params }: PageProps) {
     }
   };
 
-  // Determine typography class
   const getFontClass = () => {
     switch (settings.fontFamily) {
       case 'sans': return 'font-sans';
@@ -160,10 +175,20 @@ export default function ChapterReaderPage({ params }: PageProps) {
     }
   };
 
+  const getAlignClass = () => {
+    switch (settings.textAlign) {
+      case 'center': return 'text-center';
+      case 'justify': return 'text-justify';
+      case 'right': return 'text-right';
+      case 'left':
+      default: return 'text-left';
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-theme-base text-theme-primary transition-colors duration-300">
       
-      {/* Scroll Reading Progress Top Bar */}
+      {/* READING PROGRESS BAR - ALWAYS STAYS FIXED AT TOP */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-theme-surface z-50">
         <div 
           className="h-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] transition-all duration-150"
@@ -171,14 +196,14 @@ export default function ChapterReaderPage({ params }: PageProps) {
         />
       </div>
 
-      {/* Reader Control Sticky Navigation Bar */}
-      <header className="sticky top-1 z-40 w-full border-b border-theme bg-theme-base/90 backdrop-blur-md">
+      {/* Reader Controls Header */}
+      <header className="w-full border-b border-theme bg-theme-base/90 backdrop-blur-md z-40">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
           
           {/* TOC Sidebar Toggle Button */}
           <button
             onClick={() => setIsTocOpen(true)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-theme bg-theme-surface hover:bg-theme-card text-xs font-semibold text-theme-accent transition-all"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-theme bg-theme-surface hover:bg-theme-card text-xs font-semibold text-[var(--color-primary)] transition-all"
             title="Open Table of Contents"
           >
             <List className="w-4 h-4" />
@@ -226,20 +251,18 @@ export default function ChapterReaderPage({ params }: PageProps) {
 
           {/* Quick Reader Actions */}
           <div className="flex items-center gap-1.5">
-            {/* Bookmark Toggle */}
             <button
               onClick={handleToggleBookmark}
               className={`p-2 rounded-xl border transition-all ${
                 isBookmarked(chapterNum)
-                  ? 'border-[var(--color-primary)] bg-theme-card text-theme-accent shadow-sm'
+                  ? 'border-[var(--color-primary)] bg-theme-card text-[var(--color-primary)] shadow-sm'
                   : 'border-theme bg-theme-surface text-theme-muted hover:text-theme-primary'
               }`}
-              title={isBookmarked(chapterNum) ? 'Remove Bookmark (Saved in Cookie)' : 'Bookmark Chapter in Cookie'}
+              title={isBookmarked(chapterNum) ? 'Remove Bookmark' : 'Bookmark Chapter'}
             >
               <BookmarkIcon className="w-4 h-4 fill-current" />
             </button>
 
-            {/* Mark Completed Toggle */}
             <button
               onClick={handleToggleCompleted}
               className={`p-2 rounded-xl border transition-all ${
@@ -247,7 +270,7 @@ export default function ChapterReaderPage({ params }: PageProps) {
                   ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400'
                   : 'border-theme bg-theme-surface text-theme-muted hover:text-theme-primary'
               }`}
-              title={isCompleted(chapterNum) ? 'Marked as Read' : 'Mark as Completed'}
+              title={isCompleted(chapterNum) ? 'Marked as Read (Click to Unmark)' : 'Mark as Completed'}
             >
               <CheckCircle className="w-4 h-4" />
             </button>
@@ -256,8 +279,8 @@ export default function ChapterReaderPage({ params }: PageProps) {
         </div>
       </header>
 
-      {/* Main Chapter Text Reader Container */}
-      <main className="flex-1 py-10 px-4 sm:px-6">
+      {/* Main Chapter Text Reader Container (Distinct Background Column on Laptop/Desktop matching beyonder.pages.dev) */}
+      <main className="flex-1 py-6 md:py-12 px-2 sm:px-6">
         <div className={`mx-auto ${getWidthClass()}`}>
           
           {isLoading ? (
@@ -266,36 +289,46 @@ export default function ChapterReaderPage({ params }: PageProps) {
               <p className="font-cinzel text-sm text-theme-secondary">Loading Chapter {chapterNum}...</p>
             </div>
           ) : chapter ? (
-            <article ref={contentRef} className="space-y-8">
+            /* DESKTOP / LAPTOP DISTINCT CONTAINER COLUMN STYLING */
+            <article 
+              ref={contentRef}
+              onClick={handleContentClick}
+              className="space-y-8 bg-theme-surface md:p-10 lg:p-12 md:rounded-3xl md:border md:border-theme md:shadow-2xl transition-all select-text cursor-pointer"
+            >
               
               {/* Chapter Header */}
-              <div className="pb-8 border-b border-theme text-center space-y-2">
-                <span className="text-xs uppercase font-bold font-mono tracking-widest text-theme-gold px-3 py-1 rounded-full bg-theme-surface border border-theme inline-block">
+              <div className="pb-8 border-b border-theme text-center space-y-2 select-none">
+                <span className="text-xs uppercase font-bold font-mono tracking-widest text-[var(--color-secondary)] px-3 py-1 rounded-full bg-theme-base border border-theme inline-block">
                   Chapter {chapter.num} • {chapter.wordCount} Words
                 </span>
                 <h1 className="font-cinzel font-bold text-2xl sm:text-4xl text-theme-primary mt-2">
                   {chapter.title}
                 </h1>
-                <p className="text-xs text-theme-muted">
-                  A Regressor&apos;s Tale of Cultivation • Saved to Cookie
-                </p>
+                {settings.tapToScroll && (
+                  <p className="text-[11px] text-theme-muted font-mono">
+                    💡 Tap lower screen to scroll down
+                  </p>
+                )}
               </div>
 
-              {/* Formatted XHTML Chapter Body */}
+              {/* Formatted Chapter Body */}
               <div
-                className={`reader-body ${getFontClass()} text-theme-primary leading-relaxed`}
+                className={`reader-body ${getFontClass()} ${getAlignClass()} text-theme-primary leading-relaxed ${
+                  settings.indentParagraphs ? 'indent-paragraphs' : ''
+                }`}
                 style={{
                   fontSize: `${settings.fontSize}px`,
-                  lineHeight: settings.lineHeight
+                  lineHeight: settings.lineHeight,
+                  fontWeight: settings.fontWeight || 400
                 }}
                 dangerouslySetInnerHTML={{ __html: chapter.content }}
               />
 
               {/* Chapter Footer Navigation */}
-              <div className="pt-10 border-t border-theme flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="pt-10 border-t border-theme flex flex-col sm:flex-row items-center justify-between gap-4 select-none">
                 <Link
                   href={`/read/${Math.max(1, chapterNum - 1)}`}
-                  className={`w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-theme bg-theme-surface hover:bg-theme-card text-xs font-semibold text-theme-primary transition-all ${
+                  className={`w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-theme bg-theme-base hover:bg-theme-card text-xs font-semibold text-theme-primary transition-all ${
                     chapterNum <= 1 ? 'opacity-40 pointer-events-none' : ''
                   }`}
                 >
@@ -304,7 +337,10 @@ export default function ChapterReaderPage({ params }: PageProps) {
                 </Link>
 
                 <button
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs text-theme-muted hover:text-theme-primary transition-colors"
                 >
                   <ArrowUp className="w-4 h-4" />
@@ -337,15 +373,14 @@ export default function ChapterReaderPage({ params }: PageProps) {
         <div className="fixed inset-0 z-50 flex justify-start">
           <div 
             onClick={() => setIsTocOpen(false)} 
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm"
           />
           <div className="relative z-10 w-full max-w-sm h-full bg-theme-surface border-r border-theme shadow-2xl flex flex-col">
             
-            {/* Drawer Header & Search */}
-            <div className="p-4 border-b border-theme space-y-3 bg-theme-base/60 backdrop-blur-md">
+            <div className="p-4 border-b border-theme space-y-3 bg-theme-base">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-theme-accent" />
+                  <BookOpen className="w-5 h-5 text-[var(--color-primary)]" />
                   <h2 className="font-cinzel font-bold text-base text-theme-primary">
                     Table of Contents ({toc.length})
                   </h2>
@@ -358,7 +393,6 @@ export default function ChapterReaderPage({ params }: PageProps) {
                 </button>
               </div>
 
-              {/* Filter Search Input */}
               <div className="relative">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted" />
                 <input
@@ -371,7 +405,6 @@ export default function ChapterReaderPage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* List of Chapters */}
             <div className="flex-1 overflow-y-auto p-3 space-y-1">
               {filteredToc.map((item) => {
                 const isActive = item.num === chapterNum;
@@ -383,13 +416,13 @@ export default function ChapterReaderPage({ params }: PageProps) {
                     onClick={() => setIsTocOpen(false)}
                     className={`flex items-start justify-between p-2.5 rounded-xl border text-xs transition-all ${
                       isActive 
-                        ? 'border-[var(--color-primary)] bg-theme-card text-theme-accent font-bold shadow-sm'
+                        ? 'border-[var(--color-primary)] bg-theme-card text-[var(--color-primary)] font-bold shadow-sm'
                         : 'border-transparent text-theme-secondary hover:bg-theme-card/60'
                     }`}
                   >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-theme-gold">Ch. {item.num}</span>
+                        <span className="font-mono text-[var(--color-secondary)]">Ch. {item.num}</span>
                         {completed && (
                           <CheckCircle className="w-3 h-3 text-emerald-400 shrink-0" />
                         )}

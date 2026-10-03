@@ -10,6 +10,8 @@ export type FontFamily = 'serif' | 'sans' | 'mono' | 'cinzel';
 
 export type ReaderWidth = 'narrow' | 'medium' | 'wide' | 'full';
 
+export type TextAlign = 'left' | 'center' | 'justify' | 'right';
+
 export interface PaletteInfo {
   id: PaletteId;
   name: string;
@@ -24,11 +26,17 @@ export interface PaletteInfo {
 
 export interface ReadingSettings {
   palette: PaletteId;
-  fontSize: number; // 14 - 28
+  fontSize: number; // 14 - 32
   lineHeight: number; // 1.4 - 2.2
   fontFamily: FontFamily;
   readerWidth: ReaderWidth;
   paragraphSpacing: number; // 1 - 3
+  textAlign: TextAlign;
+  fontWeight: number; // 300 - 700
+  indentParagraphs: boolean;
+  stickyNavbar: boolean;
+  showNavbar: boolean;
+  tapToScroll: boolean;
 }
 
 export interface Bookmark {
@@ -42,7 +50,7 @@ export interface Bookmark {
 export interface ReadingProgress {
   currentChapter: number;
   currentScrollPercent: number;
-  completedChapters: number[]; // Array of completed chapter numbers
+  completedChapters: number[];
   bookmarks: Bookmark[];
   lastReadDate: string;
   totalChaptersRead: number;

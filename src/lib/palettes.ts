@@ -1,4 +1,4 @@
-import { PaletteId, PaletteInfo } from '@/types';
+import { PaletteId, PaletteInfo, ReadingSettings } from '@/types';
 
 export const COLOR_PALETTES: PaletteInfo[] = [
   {
@@ -69,13 +69,19 @@ export const COLOR_PALETTES: PaletteInfo[] = [
   }
 ];
 
-export const DEFAULT_SETTINGS = {
+export const DEFAULT_SETTINGS: ReadingSettings = {
   palette: 'catppuccin-mocha' as PaletteId,
   fontSize: 18,
   lineHeight: 1.8,
   fontFamily: 'serif' as const,
   readerWidth: 'medium' as const,
-  paragraphSpacing: 1.5
+  paragraphSpacing: 1.5,
+  textAlign: 'left' as const,
+  fontWeight: 400,
+  indentParagraphs: false,
+  stickyNavbar: true,
+  showNavbar: true,
+  tapToScroll: true
 };
 
 export const DEFAULT_PROGRESS = {

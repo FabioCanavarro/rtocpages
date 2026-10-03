@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import CoverCard3D from '@/components/3DCoverCard';
 import { useTheme } from '@/components/ThemeContext';
-import { BookOpen, Download, Sparkles, Feather, Shield, Compass, ChevronRight } from 'lucide-react';
+import { BookOpen, Download, Sparkles, Feather, Shield, Compass, ChevronRight, AlertCircle } from 'lucide-react';
 import anime from '@/lib/animeHelper';
 
 export default function HomePage() {
-  const { progress, activePalette, isLoaded } = useTheme();
+  const { progress, activePalette } = useTheme();
 
   useEffect(() => {
     anime({
@@ -62,10 +62,10 @@ export default function HomePage() {
             </blockquote>
 
             {/* Primary Action CTA Buttons */}
-            <div className="hero-animate flex flex-wrap items-center justify-center md:justify-start gap-4 mt-2">
+            <div className="hero-animate flex flex-wrap items-center justify-center md:justify-start gap-3.5 mt-2">
               <Link
                 href="/book"
-                className="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-theme-base font-bold text-sm sm:text-base shadow-xl hover:scale-105 active:scale-95 transition-all duration-200"
+                className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-theme-base font-bold text-sm sm:text-base shadow-xl hover:scale-105 active:scale-95 transition-all duration-200"
               >
                 <BookOpen className="w-5 h-5" />
                 <span>
@@ -77,10 +77,34 @@ export default function HomePage() {
               <a
                 href="/A_Regressors_Tale_of_Cultivation.epub"
                 download
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-theme-surface border border-theme hover:border-[var(--color-primary)] text-theme-primary hover:text-[var(--color-primary)] font-semibold text-sm sm:text-base shadow-md hover:scale-105 active:scale-95 transition-all duration-200"
+                className="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-theme-surface border border-theme hover:border-[var(--color-primary)] text-theme-primary hover:text-[var(--color-primary)] font-semibold text-sm sm:text-base shadow-md hover:scale-105 active:scale-95 transition-all duration-200"
               >
                 <Download className="w-5 h-5 text-[var(--color-secondary)]" />
-                <span>Download EPUB (9.43 MB)</span>
+                <span>Download EPUB</span>
+              </a>
+
+              {/* GitHub Repo Link */}
+              <a
+                href="https://github.com/FabioCanavarro/rtocpages"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-theme-surface border border-theme hover:border-theme-accent text-theme-secondary hover:text-theme-primary text-xs font-semibold shadow-sm hover:scale-105 transition-all"
+              >
+                <svg className="w-4 h-4 fill-current text-sky-400" viewBox="0 0 24 24">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                <span>GitHub Repo</span>
+              </a>
+
+              {/* Report Issues Link */}
+              <a
+                href="https://github.com/FabioCanavarro/rtocpages/issues"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-theme-surface border border-theme hover:border-theme-accent text-theme-secondary hover:text-theme-primary text-xs font-semibold shadow-sm hover:scale-105 transition-all"
+              >
+                <AlertCircle className="w-4 h-4 text-amber-400" />
+                <span>Report Issue</span>
               </a>
             </div>
 
@@ -113,12 +137,14 @@ export default function HomePage() {
               A Regressor&apos;s Tale of Cultivation Web Reader
             </p>
             <p className="text-xs text-theme-muted mt-0.5">
-              Made with Next.js & anime.js • Catppuccin Mocha & Custom Themes
+              Made with Next.js & anime.js • Vibecoded Site
             </p>
           </div>
-          <div className="flex items-center gap-4 text-theme-secondary">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-theme-secondary">
             <Link href="/book" className="hover:text-theme-primary transition-colors">Book Directory</Link>
             <a href="/A_Regressors_Tale_of_Cultivation.epub" download className="hover:text-theme-primary transition-colors">Download EPUB</a>
+            <a href="https://github.com/FabioCanavarro/rtocpages" target="_blank" rel="noopener noreferrer" className="hover:text-theme-primary transition-colors">GitHub Repo</a>
+            <a href="https://github.com/FabioCanavarro/rtocpages/issues" target="_blank" rel="noopener noreferrer" className="hover:text-theme-primary transition-colors">Report Issue</a>
           </div>
         </div>
       </footer>
