@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap');
+@import "tailwindcss";
+
+/* Color Palettes Definition */
+
+/* 1. Catppuccin Mocha (Default / Featured) */
+:root, [data-palette="catppuccin-mocha"] {
+  --bg-base: #1e1e2e;
+  --bg-surface: #181825;
+  --bg-card: #313244;
+  --bg-card-hover: #45475a;
+  --text-primary: #cdd6f4;
+  --text-secondary: #a6adc8;
+  --text-muted: #6c7086;
+  --color-primary: #cba6f7;
+  --color-primary-rgb: 203, 166, 247;
+  --color-secondary: #89b4fa;
+  --color-accent: #a6e3a1;
+  --color-highlight: #f9e2af;
+  --color-border: rgba(205, 214, 244, 0.12);
+  --color-glow: rgba(203, 166, 247, 0.25);
+  --color-badge: #f38ba8;
+}
+
+/* 2. Cultivation Jade (Dark Dao & Emerald) */
+[data-palette="cultivation-jade"] {
+  --bg-base: #0b1317;
+  --bg-surface: #05090c;
+  --bg-card: #132027;
+  --bg-card-hover: #1c2e38;
+  --text-primary: #e2f1ed;
+  --text-secondary: #90b3a7;
+  --text-muted: #53756a;
+  --color-primary: #00d294;
+  --color-primary-rgb: 0, 210, 148;
+  --color-secondary: #e6c875;
+  --color-accent: #38bdf8;
+  --color-highlight: #fbbf24;
+  --color-border: rgba(0, 210, 148, 0.15);
+  --color-glow: rgba(0, 210, 148, 0.3);
+  --color-badge: #10b981;
+}
+
+/* 3. Ink Scroll (Sepia Parchment) */
+[data-palette="ink-scroll"] {
+  --bg-base: #f4ebd9;
+  --bg-surface: #e6dac3;
+  --bg-card: #fff9ef;
+  --bg-card-hover: #faefe0;
+  --text-primary: #2c221e;
+  --text-secondary: #63534a;
+  --text-muted: #968379;
+  --color-primary: #b83b5e;
+  --color-primary-rgb: 184, 59, 94;
+  --color-secondary: #c88942;
+  --color-accent: #4a7c59;
+  --color-highlight: #d97706;
+  --color-border: rgba(44, 34, 30, 0.15);
+  --color-glow: rgba(184, 59, 94, 0.2);
+  --color-badge: #9f1239;
+}
+
+/* 4. Celestial Ether (Midnight Star) */
+[data-palette="celestial-ether"] {
+  --bg-base: #0a0e1a;
+  --bg-surface: #05070e;
+  --bg-card: #141c33;
+  --bg-card-hover: #1e294a;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --color-primary: #38bdf8;
+  --color-primary-rgb: 56, 189, 248;
+  --color-secondary: #a855f7;
+  --color-accent: #34d399;
+  --color-highlight: #f472b6;
+  --color-border: rgba(56, 189, 248, 0.15);
+  --color-glow: rgba(56, 189, 248, 0.3);
+  --color-badge: #818cf8;
+}
+
+/* 5. Obsidian Flame (Volcanic Regressor) */
+[data-palette="obsidian-flame"] {
+  --bg-base: #121214;
+  --bg-surface: #0a0a0c;
+  --bg-card: #1c1c22;
+  --bg-card-hover: #2a2a34;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --color-primary: #ef4444;
+  --color-primary-rgb: 239, 68, 68;
+  --color-secondary: #f97316;
+  --color-accent: #eab308;
+  --color-highlight: #f43f5e;
+  --color-border: rgba(239, 68, 68, 0.15);
+  --color-glow: rgba(239, 68, 68, 0.35);
+  --color-badge: #dc2626;
+}
+
+/* 6. Bamboo Zen (Light Teal) */
+[data-palette="bamboo-zen"] {
+  --bg-base: #f0f7f4;
+  --bg-surface: #dfede7;
+  --bg-card: #ffffff;
+  --bg-card-hover: #eaf4f0;
+  --text-primary: #192724;
+  --text-secondary: #4a635e;
+  --text-muted: #7f9994;
+  --color-primary: #0d9488;
+  --color-primary-rgb: 13, 148, 136;
+  --color-secondary: #0284c7;
+  --color-accent: #854d0e;
+  --color-highlight: #10b981;
+  --color-border: rgba(13, 148, 136, 0.18);
+  --color-glow: rgba(13, 148, 136, 0.2);
+  --color-badge: #0f766e;
+}
+
+/* Base Body Styles */
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* Reader Typography Classes */
+.font-serif {
+  font-family: 'Lora', 'Merriweather', Georgia, serif;
+}
+.font-sans {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Dynamic Glass & Glow Utility Classes */
+.bg-theme-base { background-color: var(--bg-base); }
+.bg-theme-surface { background-color: var(--bg-surface); }
+.bg-theme-card { background-color: var(--bg-card); }
+
+.text-theme-primary { color: var(--text-primary); }
+.text-theme-secondary { color: var(--text-secondary); }
+.text-theme-muted { color: var(--text-muted); }
+.text-theme-accent { color: var(--color-primary); }
+.text-theme-gold { color: var(--color-secondary); }
+
+.border-theme { border-color: var(--color-border); }
+
+.glass-panel {
+  background: rgba(var(--color-primary-rgb), 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+}
+
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--color-primary);
+  box-shadow: 0 10px 30px -10px var(--color-glow);
+}
+
+.glow-shadow {
+  box-shadow: 0 0 25px var(--color-glow);
+}
+
+.glow-text {
+  text-shadow: 0 0 12px var(--color-glow);
+}
+
+/* 3D Card Parallax Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+/* Reader Content Styling */
+.reader-body p {
+  margin-bottom: 1.5rem;
+  line-height: inherit;
+}
+.reader-body h1, .reader-body h2, .reader-body h3 {
+  font-family: 'Cinzel', serif;
+  color: var(--color-primary);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+.reader-body blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--text-secondary);
+  background: rgba(var(--color-primary-rgb), 0.05);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0 8px 8px 0;
+}

@@ -1,0 +1,128 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import CoverCard3D from '@/components/3DCoverCard';
+import { useTheme } from '@/components/ThemeContext';
+import { BookOpen, Download, Sparkles, Feather, Shield, Compass, ChevronRight } from 'lucide-react';
+import anime from '@/lib/animeHelper';
+
+export default function HomePage() {
+  const { progress, activePalette, isLoaded } = useTheme();
+
+  useEffect(() => {
+    anime({
+      targets: '.hero-animate',
+      translateY: [20, 0],
+      opacity: [0, 1],
+      delay: anime.stagger(100),
+      duration: 1000,
+      easing: 'easeOutCubic'
+    });
+  }, []);
+
+  return (
+    <div className="min-h-screen flex flex-col bg-theme-base text-theme-primary transition-colors duration-300">
+      
+      {/* HERO SECTION */}
+      <section className="relative overflow-hidden pt-10 pb-16 md:pt-16 md:pb-24 px-4 sm:px-6 lg:px-8">
+        {/* Background Ambient Particles Overlay */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-radial from-[var(--color-primary)]/10 via-transparent to-transparent pointer-events-none -z-10 blur-3xl" />
+
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-around gap-12 lg:gap-16">
+          
+          {/* 3D Novel Cover Card */}
+          <div className="w-full md:w-auto flex justify-center shrink-0">
+            <CoverCard3D coverUrl="/cover.png" title="A Regressor's Tale of Cultivation" />
+          </div>
+
+          {/* Hero Content Text */}
+          <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-2xl">
+            
+            {/* Active Theme Badge */}
+            <div className="hero-animate inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-theme-surface border border-theme mb-4 shadow-sm">
+              <Sparkles className="w-4 h-4 text-[var(--color-primary)]" />
+              <span className="text-xs font-semibold text-theme-secondary">
+                Theme: <strong className="text-[var(--color-primary)] font-cinzel">{activePalette.name}</strong>
+              </span>
+            </div>
+
+            {/* Main Title */}
+            <h1 className="hero-animate font-cinzel font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight text-theme-primary filter drop-shadow-md leading-tight">
+              A Regressor&apos;s Tale of Cultivation
+            </h1>
+            
+            <p className="hero-animate text-xs sm:text-sm font-semibold font-mono text-[var(--color-secondary)] uppercase tracking-widest mt-2">
+              회차진행자: 회귀자의 신선기 • Author: Pluto (해날)
+            </p>
+
+            {/* Iconic Novel Quote */}
+            <blockquote className="hero-animate py-5 px-4 my-4 rounded-2xl bg-theme-surface/60 border-l-4 border-[var(--color-primary)] text-sm sm:text-base text-theme-secondary italic leading-relaxed backdrop-blur-sm">
+              &ldquo;The Fool may wander through gray fog, but I walk through blood and broken swords across ten thousand lifetimes. Even without innate talent or legendary cheats... I shall carve my own Dao into the celestial sky.&rdquo;
+            </blockquote>
+
+            {/* Primary Action CTA Buttons */}
+            <div className="hero-animate flex flex-wrap items-center justify-center md:justify-start gap-4 mt-2">
+              <Link
+                href="/book"
+                className="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-theme-base font-bold text-sm sm:text-base shadow-xl hover:scale-105 active:scale-95 transition-all duration-200"
+              >
+                <BookOpen className="w-5 h-5" />
+                <span>
+                  {progress.completedChapters.length > 0 ? `Continue (Ch. ${progress.currentChapter || 1})` : 'Browse Chapters'}
+                </span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              <a
+                href="/A_Regressors_Tale_of_Cultivation.epub"
+                download
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-theme-surface border border-theme hover:border-[var(--color-primary)] text-theme-primary hover:text-[var(--color-primary)] font-semibold text-sm sm:text-base shadow-md hover:scale-105 active:scale-95 transition-all duration-200"
+              >
+                <Download className="w-5 h-5 text-[var(--color-secondary)]" />
+                <span>Download EPUB (9.43 MB)</span>
+              </a>
+            </div>
+
+            {/* Quick Specs Bar */}
+            <div className="hero-animate flex items-center gap-6 mt-8 pt-6 border-t border-theme text-xs text-theme-muted">
+              <div className="flex items-center gap-1.5">
+                <Feather className="w-4 h-4 text-[var(--color-primary)]" />
+                <span><strong>869</strong> Chapters</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Shield className="w-4 h-4 text-[var(--color-secondary)]" />
+                <span><strong>1.2M+</strong> Words</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Compass className="w-4 h-4 text-emerald-400" />
+                <span>Cookies Sync</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="mt-auto border-t border-theme bg-theme-surface py-8 px-4 text-center text-xs text-theme-muted">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <p className="font-cinzel font-bold text-theme-primary text-sm">
+              A Regressor&apos;s Tale of Cultivation Web Reader
+            </p>
+            <p className="text-xs text-theme-muted mt-0.5">
+              Made with Next.js & anime.js • Catppuccin Mocha & Custom Themes
+            </p>
+          </div>
+          <div className="flex items-center gap-4 text-theme-secondary">
+            <Link href="/book" className="hover:text-theme-primary transition-colors">Book Directory</Link>
+            <a href="/A_Regressors_Tale_of_Cultivation.epub" download className="hover:text-theme-primary transition-colors">Download EPUB</a>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  );
+}
