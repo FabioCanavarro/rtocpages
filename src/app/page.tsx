@@ -22,10 +22,10 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-theme-base text-theme-primary transition-colors duration-300">
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-theme-base text-theme-primary transition-colors duration-300">
       
-      {/* HERO SECTION */}
-      <section className="relative overflow-hidden pt-8 pb-12 md:pt-14 md:pb-16 px-4 sm:px-6 lg:px-8 my-auto">
+      {/* HERO SECTION (Centered on Screen, No Footer) */}
+      <section className="relative overflow-hidden py-8 px-4 sm:px-6 lg:px-8 w-full">
         {/* Background Ambient Particles Overlay */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-radial from-[var(--color-primary)]/10 via-transparent to-transparent pointer-events-none -z-10 blur-3xl" />
 
@@ -128,23 +128,6 @@ export default function HomePage() {
 
         </div>
       </section>
-
-      {/* FOOTER (CLEAN & COMPACT, NO UNWANTED SUBTEXT) */}
-      <footer className="border-t border-theme bg-theme-surface py-5 px-4 text-center text-xs text-theme-muted shrink-0">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div>
-            <p className="font-cinzel font-bold text-theme-primary text-sm">
-              A Regressor&apos;s Tale of Cultivation Web Reader
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-theme-secondary">
-            <Link href="/book" className="hover:text-theme-primary transition-colors">Book Directory</Link>
-            <a href="/A_Regressors_Tale_of_Cultivation.epub" download className="hover:text-theme-primary transition-colors">Download EPUB</a>
-            <a href="https://github.com/FabioCanavarro/rtocpages" target="_blank" rel="noopener noreferrer" className="hover:text-theme-primary transition-colors">GitHub Repo</a>
-            <a href="https://github.com/FabioCanavarro/rtocpages/issues" target="_blank" rel="noopener noreferrer" className="hover:text-theme-primary transition-colors">Report Issue</a>
-          </div>
-        </div>
-      </footer>
 
     </div>
   );

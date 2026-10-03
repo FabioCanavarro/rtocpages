@@ -99,14 +99,12 @@ export default function ChapterReaderPage({ params }: PageProps) {
   // Tap to Scroll feature
   const handleContentClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!settings.tapToScroll) return;
-    // Don't trigger if user clicks an interactive element like button or link
     const target = e.target as HTMLElement;
     if (target.closest('a') || target.closest('button') || target.closest('input')) return;
 
     const clickY = e.clientY;
     const windowHeight = window.innerHeight;
 
-    // Tap in lower 75% of screen -> scroll down
     if (clickY > windowHeight * 0.25) {
       window.scrollBy({ top: windowHeight * 0.75, behavior: 'smooth' });
     } else {
@@ -185,6 +183,8 @@ export default function ChapterReaderPage({ params }: PageProps) {
     }
   };
 
+  const hasBorder = settings.showReaderBorder ?? true;
+
   return (
     <div className="min-h-screen flex flex-col bg-theme-base text-theme-primary transition-colors duration-300">
       
@@ -200,7 +200,6 @@ export default function ChapterReaderPage({ params }: PageProps) {
       <header className="w-full border-b border-theme bg-theme-base/90 backdrop-blur-md z-40">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
           
-          {/* TOC Sidebar Toggle Button */}
           <button
             onClick={() => setIsTocOpen(true)}
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-theme bg-theme-surface hover:bg-theme-card text-xs font-semibold text-[var(--color-primary)] transition-all"
@@ -210,7 +209,6 @@ export default function ChapterReaderPage({ params }: PageProps) {
             <span className="hidden sm:inline">Chapters</span>
           </button>
 
-          {/* Quick Chapter Switcher Dropdown */}
           <div className="flex items-center gap-1.5">
             <Link
               href={`/read/${Math.max(1, chapterNum - 1)}`}
@@ -249,7 +247,6 @@ export default function ChapterReaderPage({ params }: PageProps) {
             </Link>
           </div>
 
-          {/* Quick Reader Actions */}
           <div className="flex items-center gap-1.5">
             <button
               onClick={handleToggleBookmark}
@@ -279,8 +276,8 @@ export default function ChapterReaderPage({ params }: PageProps) {
         </div>
       </header>
 
-      {/* Main Chapter Text Reader Container (Distinct Background Column on Laptop/Desktop matching beyonder.pages.dev) */}
-      <main className="flex-1 py-6 md:py-12 px-2 sm:px-6">
+      {/* Main Chapter Text Reader Container */}
+      <main className="flex-1 py-4 md:py-10 px-0 sm:px-6">
         <div className={`mx-auto ${getWidthClass()}`}>
           
           {isLoading ? (
@@ -289,18 +286,21 @@ export default function ChapterReaderPage({ params }: PageProps) {
               <p className="font-cinzel text-sm text-theme-secondary">Loading Chapter {chapterNum}...</p>
             </div>
           ) : chapter ? (
-            /* DESKTOP / LAPTOP DISTINCT CONTAINER COLUMN STYLING */
+            /* MOBILE: Transparent, no color mismatch, no borders */
+            /* DESKTOP (md:): Distinct background & border ONLY when hasBorder is true */
             <article 
               ref={contentRef}
               onClick={handleContentClick}
-              className={`space-y-8 bg-theme-surface md:p-10 lg:p-12 md:rounded-3xl transition-all select-text cursor-pointer ${
-                (settings.showReaderBorder ?? true) ? 'md:border md:border-theme md:shadow-2xl' : 'md:border-transparent'
+              className={`space-y-8 p-4 sm:p-6 transition-all select-text cursor-pointer ${
+                hasBorder 
+                  ? 'md:bg-theme-surface md:p-10 lg:p-12 md:rounded-3xl md:border md:border-theme md:shadow-2xl' 
+                  : 'bg-transparent border-0 shadow-none md:p-8'
               }`}
             >
               
               {/* Chapter Header */}
               <div className="pb-8 border-b border-theme text-center space-y-2 select-none">
-                <span className="text-xs uppercase font-bold font-mono tracking-widest text-[var(--color-secondary)] px-3 py-1 rounded-full bg-theme-base border border-theme inline-block">
+                <span className="text-xs uppercase font-bold font-mono tracking-widest text-[var(--color-secondary)] px-3 py-1 rounded-full bg-theme-surface border border-theme inline-block">
                   Chapter {chapter.num} • {chapter.wordCount} Words
                 </span>
                 <h1 className="font-cinzel font-bold text-2xl sm:text-4xl text-theme-primary mt-2">
@@ -330,7 +330,7 @@ export default function ChapterReaderPage({ params }: PageProps) {
               <div className="pt-10 border-t border-theme flex flex-col sm:flex-row items-center justify-between gap-4 select-none">
                 <Link
                   href={`/read/${Math.max(1, chapterNum - 1)}`}
-                  className={`w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-theme bg-theme-base hover:bg-theme-card text-xs font-semibold text-theme-primary transition-all ${
+                  className={`w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-theme bg-theme-surface hover:bg-theme-card text-xs font-semibold text-theme-primary transition-all ${
                     chapterNum <= 1 ? 'opacity-40 pointer-events-none' : ''
                   }`}
                 >
