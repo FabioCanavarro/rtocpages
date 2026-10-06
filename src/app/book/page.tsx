@@ -17,7 +17,8 @@ import {
   Check, 
   RotateCcw,
   Sparkles,
-  CheckSquare
+  CheckSquare,
+  Eye
 } from 'lucide-react';
 
 export default function BookDirectoryPage() {
@@ -39,6 +40,8 @@ export default function BookDirectoryPage() {
   const [rangeStart, setRangeStart] = useState<number>(1);
   const [rangeEnd, setRangeEnd] = useState<number>(50);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewsMap, setViewsMap] = useState<Record<number, number>>({});
+  const [totalViews, setTotalViews] = useState<number>(0);
 
   useEffect(() => {
     fetch('/epub_data/toc.json')
@@ -51,6 +54,14 @@ export default function BookDirectoryPage() {
         console.error(err);
         setIsLoading(false);
       });
+
+    fetch('/api/views')
+      .then(res => res.json())
+      .then(data => {
+        if (data.views) setViewsMap(data.views);
+        if (data.totalViews !== undefined) setTotalViews(data.totalViews);
+      })
+      .catch(err => console.error('Failed to load views:', err));
   }, []);
 
   const handleToggleCompleted = (e: React.MouseEvent, num: number) => {
@@ -167,7 +178,10 @@ export default function BookDirectoryPage() {
               </div>
               <div className="flex items-center justify-between pt-1 text-theme-muted">
                 <span>Bookmarks: <strong>{progress.bookmarks.length}</strong></span>
-                <span>Cookie Saved</span>
+                <span className="flex items-center gap-1 font-mono text-[var(--color-secondary)]">
+                  <Eye className="w-3.5 h-3.5" />
+                  Total Views: <strong>{totalViews.toLocaleString()}</strong>
+                </span>
               </div>
             </div>
 
@@ -290,6 +304,8 @@ export default function BookDirectoryPage() {
                 {filteredChapters.map((item) => {
                   const completed = isCompleted(item.num);
                   const bookmarked = isBookmarked(item.num);
+                  const chViews = viewsMap[item.num] || 0;
+
                   return (
                     <div
                       key={item.num}
@@ -303,11 +319,18 @@ export default function BookDirectoryPage() {
                         href={`/read/${item.num}`}
                         className="flex-1 min-w-0"
                       >
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2.5 flex-wrap">
                           <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--color-secondary)]">
                             CHAPTER {item.num}
                           </span>
+                          
+                          {/* Chapter View Count Badge */}
+                          <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-theme-muted bg-theme-surface/80 px-2 py-0.5 rounded-md border border-theme">
+                            <Eye className="w-3 h-3 text-[var(--color-secondary)]" />
+                            <span>{chViews.toLocaleString()} views</span>
+                          </span>
                         </div>
+
                         <h3 className="font-cinzel font-bold text-sm sm:text-base text-theme-primary group-hover:text-[var(--color-primary)] transition-colors truncate mt-1">
                           {item.title}
                         </h3>

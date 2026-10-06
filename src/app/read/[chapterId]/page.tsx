@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useTheme } from '@/components/ThemeContext';
+import CommentSection from '@/components/CommentSection';
 import { ChapterData, TOCItem } from '@/types';
 import { 
   ChevronLeft, 
@@ -14,7 +15,9 @@ import {
   Search, 
   X, 
   ArrowUp,
-  BookOpen
+  BookOpen,
+  Eye,
+  MessageSquare
 } from 'lucide-react';
 import anime from '@/lib/animeHelper';
 
@@ -42,9 +45,11 @@ export default function ChapterReaderPage({ params }: PageProps) {
   const [isTocOpen, setIsTocOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [scrollPercent, setScrollPercent] = useState(0);
+  const [chapterViews, setChapterViews] = useState<number>(0);
+  const [toastMsg, setToastMsg] = useState<string>('');
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Load Chapter & TOC Data
+  // Load Chapter, TOC Data & Track Chapter Views
   useEffect(() => {
     setIsLoading(true);
 
@@ -79,6 +84,23 @@ export default function ChapterReaderPage({ params }: PageProps) {
         console.error(err);
         setIsLoading(false);
       });
+
+    // Increment and fetch chapter view counter (guarded per session)
+    const sessionKey = `rtoc_viewed_ch_${chapterNum}`;
+    const alreadyViewed = typeof window !== 'undefined' && sessionStorage.getItem(sessionKey);
+
+    const viewMethod = alreadyViewed ? 'GET' : 'POST';
+
+    fetch(`/api/chapters/${chapterNum}/views`, { method: viewMethod })
+      .then(res => res.json())
+      .then(data => {
+        if (data.views !== undefined) setChapterViews(data.views);
+        if (!alreadyViewed && typeof window !== 'undefined') {
+          sessionStorage.setItem(sessionKey, 'true');
+        }
+      })
+      .catch(err => console.error('View counter error:', err));
+
   }, [chapterNum]);
 
   // Track scroll position percentage
@@ -100,7 +122,7 @@ export default function ChapterReaderPage({ params }: PageProps) {
   const handleContentClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!settings.tapToScroll) return;
     const target = e.target as HTMLElement;
-    if (target.closest('a') || target.closest('button') || target.closest('input')) return;
+    if (target.closest('a') || target.closest('button') || target.closest('input') || target.closest('#comments')) return;
 
     const clickY = e.clientY;
     const windowHeight = window.innerHeight;
@@ -115,6 +137,7 @@ export default function ChapterReaderPage({ params }: PageProps) {
   // Keyboard navigation shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.key === 'ArrowLeft' && chapterNum > 1) {
         router.push(`/read/${chapterNum - 1}`);
       } else if (e.key === 'ArrowRight' && chapterNum < 869) {
@@ -125,14 +148,21 @@ export default function ChapterReaderPage({ params }: PageProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [chapterNum, router]);
 
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(''), 3000);
+  };
+
   const handleToggleBookmark = () => {
     if (!chapter) return;
+    const currentlyBookmarked = isBookmarked(chapterNum);
     toggleBookmark({
       chapterNum: chapter.num,
       chapterTitle: chapter.title,
       timestamp: new Date().toISOString(),
       scrollPercent: scrollPercent
     });
+    showToast(currentlyBookmarked ? `Removed Bookmark for Chapter ${chapterNum}` : `Bookmarked Chapter ${chapterNum}`);
   };
 
   const handleToggleCompleted = () => {
@@ -142,8 +172,10 @@ export default function ChapterReaderPage({ params }: PageProps) {
         completedChapters: updated,
         totalChaptersRead: updated.length
       });
+      showToast(`Unmarked Chapter ${chapterNum}`);
     } else {
       markCompleted(chapterNum);
+      showToast(`Marked Chapter ${chapterNum} as Read`);
     }
   };
 
@@ -197,6 +229,14 @@ export default function ChapterReaderPage({ params }: PageProps) {
         />
       </div>
 
+      {/* Floating Toast Notification */}
+      {toastMsg && (
+        <div className="fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-2xl bg-theme-surface border border-theme shadow-2xl text-xs font-bold text-theme-primary animate-bounce flex items-center gap-2">
+          <BookmarkIcon className="w-4 h-4 text-[var(--color-primary)] fill-current" />
+          <span>{toastMsg}</span>
+        </div>
+      )}
+
       {/* Reader Controls Header */}
       <header className="w-full border-b border-theme bg-theme-base/90 backdrop-blur-md z-40">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
@@ -249,6 +289,17 @@ export default function ChapterReaderPage({ params }: PageProps) {
           </div>
 
           <div className="flex items-center gap-1.5">
+            {/* View Counter Badge */}
+            {chapterViews > 0 && (
+              <div 
+                className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-theme bg-theme-surface text-xs font-mono font-semibold text-theme-secondary"
+                title={`${chapterViews} views for Chapter ${chapterNum}`}
+              >
+                <Eye className="w-3.5 h-3.5 text-[var(--color-secondary)]" />
+                <span>{chapterViews.toLocaleString()}</span>
+              </div>
+            )}
+
             <button
               onClick={handleToggleBookmark}
               className={`p-2 rounded-xl border transition-all ${
@@ -290,8 +341,6 @@ export default function ChapterReaderPage({ params }: PageProps) {
               <p className="font-cinzel text-sm text-theme-secondary">Loading Chapter {chapterNum}...</p>
             </div>
           ) : chapter ? (
-            /* MOBILE: Transparent, no color mismatch, no borders */
-            /* DESKTOP (md:): Distinct background & border ONLY when hasBorder is true */
             <article 
               ref={contentRef}
               onClick={handleContentClick}
@@ -326,8 +375,45 @@ export default function ChapterReaderPage({ params }: PageProps) {
                 <div dangerouslySetInnerHTML={{ __html: chapter.content }} />
               </div>
 
+              {/* View Counter Bar & Jump to Comments */}
+              <div className="pt-6 border-t border-theme/60 flex flex-wrap items-center justify-between gap-3 text-xs text-theme-muted select-none">
+                <div className="flex items-center gap-4">
+                  <span className="flex items-center gap-1.5 font-mono">
+                    <Eye className="w-4 h-4 text-[var(--color-secondary)]" />
+                    <strong>{chapterViews.toLocaleString()}</strong> Views
+                  </span>
+                  <a 
+                    href="#comments" 
+                    className="flex items-center gap-1.5 font-semibold text-[var(--color-primary)] hover:underline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    Join Discussion
+                  </a>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleBookmark();
+                    }}
+                    className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                      isBookmarked(chapterNum)
+                        ? 'border-[var(--color-primary)] bg-theme-card text-[var(--color-primary)]'
+                        : 'border-theme bg-theme-base text-theme-secondary hover:text-theme-primary'
+                    }`}
+                  >
+                    <BookmarkIcon className={`w-3.5 h-3.5 ${isBookmarked(chapterNum) ? 'fill-current' : ''}`} />
+                    <span>{isBookmarked(chapterNum) ? 'Bookmarked' : 'Bookmark'}</span>
+                  </button>
+                </div>
+              </div>
+
               {/* Chapter Footer Navigation */}
-              <div className="pt-10 border-t border-theme flex flex-col sm:flex-row items-center justify-between gap-4 select-none">
+              <div className="pt-8 border-t border-theme flex flex-col sm:flex-row items-center justify-between gap-4 select-none">
                 <Link
                   href={`/read/${Math.max(1, chapterNum - 1)}`}
                   className={`w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-theme bg-theme-surface hover:bg-theme-card text-xs font-semibold text-theme-primary transition-all ${
@@ -359,6 +445,9 @@ export default function ChapterReaderPage({ params }: PageProps) {
                   <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
+
+              {/* LIVE CHAPTER COMMENT SECTION */}
+              <CommentSection chapterId={chapterNum} chapterTitle={chapter.title} />
 
             </article>
           ) : (

@@ -108,3 +108,43 @@ export function unmarkRangeCompletedInCookie(startNum: number, endNum: number): 
     totalChaptersRead: updatedCompleted.length
   });
 }
+
+const MY_COMMENTS_COOKIE_KEY = 'rtoc_my_comments_v1';
+
+export function getMyCommentIds(): string[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = Cookies.get(MY_COMMENTS_COOKIE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw);
+  } catch (e) {
+    return [];
+  }
+}
+
+export function saveMyCommentId(commentId: string): string[] {
+  const current = getMyCommentIds();
+  if (current.includes(commentId)) return current;
+  const updated = [...current, commentId];
+  if (typeof window !== 'undefined') {
+    try {
+      Cookies.set(MY_COMMENTS_COOKIE_KEY, JSON.stringify(updated), { expires: COOKIE_EXPIRES_DAYS, sameSite: 'lax' });
+    } catch (e) {
+      console.error('Error saving comment cookie:', e);
+    }
+  }
+  return updated;
+}
+
+export function removeMyCommentId(commentId: string): string[] {
+  const current = getMyCommentIds();
+  const updated = current.filter(id => id !== commentId);
+  if (typeof window !== 'undefined') {
+    try {
+      Cookies.set(MY_COMMENTS_COOKIE_KEY, JSON.stringify(updated), { expires: COOKIE_EXPIRES_DAYS, sameSite: 'lax' });
+    } catch (e) {
+      console.error('Error removing comment cookie:', e);
+    }
+  }
+  return updated;
+}
